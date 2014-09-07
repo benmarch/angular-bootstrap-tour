@@ -225,8 +225,12 @@
                     order: attrs.order || 0
                 };
 
+                if (attrs.path) { step.path = attrs.path; }
+                if (attrs.animation) { step.animation = attrs.animation; }
+                if (attrs.container) { step.container = attrs.container; }
                 if (attrs.placement) { step.placement = attrs.placement; }
                 if (attrs.backdrop) { step.backdrop = attrs.backdrop; }
+                if (attrs.redirect) { step.redirect = attrs.redirect; }
                 if (attrs.orphan) { step.orphan = attrs.orphan; }
                 if (attrs.reflex) { step.reflex = attrs.reflex; }
 
