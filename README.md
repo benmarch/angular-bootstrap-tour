@@ -1,40 +1,88 @@
 # angular-bootstrap-tour
-[![Build Status][build-image]][build-url]
-[![Code GPA][gpa-image]][gpa-url]
-[![Test Coverage][coverage-image]][coverage-url]
-[![Dependency Status][depstat-image]][depstat-url]
 [![Bower Version][bower-image]][bower-url]
-[![NPM version][npm-image]][npm-url]
-[![IRC Channel][irc-image]][irc-url]
-[![Gitter][gitter-image]][gitter-url]
-[![GitTip][tip-image]][tip-url]
 
 ## About
 
-All about how amazing the angular-bootstrap-tour micro-library is.
+This is a simple Angular wrapper around [Bootstrap Tour](http://www.bootstraptour.com).
+Simply add the "tour" directive anywhere, and add the "tour-step" directive to any element within "tour" that needs a tip.
+
+All [options](http://bootstraptour.com/api/) are available by adding the corresponding attributes to the directive element.
+
+There is also a "skip" option that if evaluates to true, will skip over the step.
 
 This repository was scaffolded with [generator-microjs](https://github.com/daniellmb/generator-microjs).
 
+## Getting Started
+Get the package:
+
+    bower install angular-bootstrap-tour
+
+Add the script tags:
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bootstrap-tour/build/js/bootstrap-tour.js"></script>
+    <script src="bower_components/angular-bootstrap-tour/dist/angular-bootstrap-tour.js"></script>
+
+And the Bootstrap Tour CSS (or create your own).
+
+    <link rel="stylesheet" href="bower_components/bootstrap-tour/build/css/bootstrap-tour.css" />
+
+
 ## Examples
 
-### JavaScript
+    <div tour placement="top" on-end="onTourEnd(tour)" after-get-state="afterGetStateFunction">
+        <div id="mainMenu" tour-step title="Main Menu" content="{{mainMenuDescription}}" order="0" skip="pageName !== 'home'">
+            ...
+        </div>
 
-```JavaScript
-  // TODO
-```
+        ...
 
-## Install Choices
-- `bower install angular-bootstrap-tour`
-- [download the zip](https://github.com/benmarch/angular-bootstrap-tour/archive/master.zip)
+    </div>
 
-## Tasks
 
-All tasks can be run by simply running `grunt` or with the `npm test` command, or individually:
+### Tour Directive
 
-  * `grunt lint` will lint source code for syntax errors and anti-patterns.
-  * `grunt gpa` will analyze source code against complexity thresholds.
-  * `grunt test` will run the jasmine unit tests against the source code.
-  * `grunt test-min` will run the jasmine unit tests against the minified code.
+The tour directive creates a wrapper that contains all tour steps, and adds the tour object to the scope. If no options are specified, they all default to Bootstrap Tour's defaults.
+Values of event handler options will be evaluated against the tour's scope. For the afterGetState, afterSetState, and afterRemoveState, the value should
+evaluate to a function that takes 2 arguments, key and value. The container option should be a CSS selector, and defaults to "body".
+You can also pass an object to the tour-options attribute that will override any other attribute options.
+
+### TourStep Directive
+
+The tour-step directive takes all the options available in Bootstrap Tour, with a few alterations. Instead of next and prev options, just use the "order" option.
+Order is used as a weighting (0 is first) and the plugin will dynamically determine which ones come before and after. If order is ommitted, it will default to 0.
+Multiple steps can have the same order, and those will display in the order that they are linked (usually the order in which they appear in the DOM.)
+If order is omitted from all tour-steps, the order will be whatever order in which they are linked. Steps can be skipped by passing the "skip" option an expression that evaluates to a boolean.
+The expression is evaluated before each step, so it can be a dynamic expression. This is useful if you have steps in a global layout, but only want to show them on the home page.
+Steps that are on hidden elements will not be shown. (Hidden means truly hidden, not obscured.)
+The title and contents options are watched, so an interpolated value can be passed.
+
+## TODO's
+
+- Add template support (both string templates and template URLs)
+- Write some tests!! (Come on Ben, stop being lazy ;p)
+
+## Build It Yourself
+
+Assuming you have Node, grunt, and bower installed:
+
+    npm install
+
+    bower install
+
+    grunt
+
+
+## Notes
+
+I am using this in a personal project, but I haven't needed to use all the Bootstrap Tour options. This means that some of them might not be working
+due to the option values either not being passed correctly, or not being passed as interpolated values.
+If you run across any issues please report them with an example and I will fix them ASAP, or fork me and create a PR.
+I will have support for templates very soon, hopefully this week.
+
+Thanks and enjoy!
 
 ## License
 
