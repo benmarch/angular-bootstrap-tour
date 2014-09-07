@@ -1,0 +1,59 @@
+{
+  "name": "angular-bootstrap-tour",
+  "version": "0.1.0",
+  "description": "angular-bootstrap-tour scaffolded with generator-microjs v0.1.2.",
+  "author": {
+    "name": "",
+    "email": "",
+    "url": "https://github.com/benmarch"
+  },
+  "homepage": "https://github.com/benmarch/angular-bootstrap-tour",
+  "bugs": {
+    "url": "https://github.com/benmarch/angular-bootstrap-tour/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://benmarch.mit-license.org"
+    }
+  ],
+  "maintainers": [],
+  "contributors": [
+    {
+      "name": "Daniel Lamb",
+      "email": "dlamb.open.source@gmail.com",
+      "url": "https://github.com/daniellmb"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benmarch/angular-bootstrap-tour.git"
+  },
+  "main": "angular-bootstrap-tour.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "keywords": [
+    "micro",
+    "framework",
+    "library"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-complexity": "*",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "*",
+    "grunt-karma": "*",
+    "grunt-wiredep": "^1.9.0",
+    "karma-coverage": "^0.2.6",
+    "karma-jasmine": "*",
+    "karma-phantomjs-launcher": "*",
+    "load-grunt-tasks": "^0.6.0",
+    "time-grunt": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
