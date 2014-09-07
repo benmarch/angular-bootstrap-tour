@@ -25,11 +25,14 @@ Add the script tags:
     <script src="bower_components/bootstrap-tour/build/js/bootstrap-tour.js"></script>
     <script src="bower_components/angular-bootstrap-tour/dist/angular-bootstrap-tour.js"></script>
 
-And the Bootstrap Tour CSS (or create your own).
+And the Bootstrap Tour CSS (or create your own):
 
     <link rel="stylesheet" href="bower_components/bootstrap-tour/build/css/bootstrap-tour.css" />
 
+Then add the module to your app:
 
+    angular.module('myApp', ['bm.bsTour']);
+    
 ## Examples
 
     <div tour placement="top" on-end="onTourEnd(tour)" after-get-state="afterGetStateFunction">
