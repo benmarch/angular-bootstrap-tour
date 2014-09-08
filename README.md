@@ -32,10 +32,10 @@ And the Bootstrap Tour CSS (or create your own):
 Then add the module to your app:
 
     angular.module('myApp', ['bm.bsTour']);
-    
+
 ## Examples
 
-    <div tour placement="top" on-end="onTourEnd(tour)" after-get-state="afterGetStateFunction">
+    <div tour placement="top" on-end="onTourEnd(tour)" after-get-state="afterGetStateFunction" template-url="tour_template.html">
         <div id="mainMenu" tour-step title="Main Menu" content="{{mainMenuDescription}}" order="0" skip="pageName !== 'home'">
             ...
         </div>
@@ -64,7 +64,6 @@ The title and contents options are watched, so an interpolated value can be pass
 
 ## TODO's
 
-- Add template support (both string templates and template URLs)
 - Write some tests!! (Come on Ben, stop being lazy ;p)
 
 ## Build It Yourself
@@ -83,7 +82,9 @@ Assuming you have Node, grunt, and bower installed:
 I am using this in a personal project, but I haven't needed to use all the Bootstrap Tour options. This means that some of them might not be working
 due to the option values either not being passed correctly, or not being passed as interpolated values.
 If you run across any issues please report them with an example and I will fix them ASAP, or fork me and create a PR.
-I will have support for templates very soon, hopefully this week.
+You can now pass a template URL to either the tour or tour-step directives, and the template will be linked to whichever scope the template is specified on.
+(ie. if you add the template URL to the tour directive, it will always use the tour directive's scope, if you add it to a step, it will use the step's scope.)
+Alternatively, you can specify an expression that evaluates to a string that will be used as the template (using the "template" attribute.)
 
 Thanks and enjoy!
 
