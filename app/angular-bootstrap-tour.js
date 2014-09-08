@@ -93,7 +93,7 @@
                     $compile($template)(scope);
                 });
                 return $template;
-            }
+            };
 
         };
 
@@ -299,7 +299,7 @@
                 }
 
                 if (template) {
-                    options.template = template;
+                    step.template = template;
                 }
 
                 function stepIsSkipped() {

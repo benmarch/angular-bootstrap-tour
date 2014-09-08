@@ -82,6 +82,38 @@
 
     }
 
+    app.factory('TourTemplateFactory', ['$templateCache', '$compile', function ($templateCache, $compile) {
+
+        var templateFactory = {};
+
+        templateFactory.wrap = function (template, scope) {
+            return function (/*index, step*/) {
+                var $template = angular.element(template); //requires jQuery
+                safeApply(scope, function () {
+                    $compile($template)(scope);
+                });
+                return $template;
+            };
+
+        };
+
+        templateFactory.get = function (templateUrl, scope) {
+
+            var template = $templateCache.get(templateUrl);
+
+            if (template) {
+                return templateFactory.wrap(template, scope);
+            }
+
+            return null;
+
+        };
+
+
+        return templateFactory;
+
+    }]);
+
     app.controller('TourController', ['$filter', function ($filter) {
 
         var self = this,
@@ -137,7 +169,7 @@
 
     }]);
 
-    app.directive('tour', [function () {
+    app.directive('tour', ['TourTemplateFactory', function (TourTemplateFactory) {
 
         return {
             restrict: 'EA',
@@ -157,7 +189,8 @@
                     placement: attrs.placement || 'right',
                     backdrop: attrs.backdrop || false,
                     orphan: attrs.orphan || false
-                };
+                },
+                    template;
 
                 attachEventHandlers(scope, attrs, options);
 
@@ -197,6 +230,18 @@
                     };
                 }
 
+                if (attrs.template) {
+                    template = TourTemplateFactory.wrap(scope.$eval(attrs.template), scope);
+                }
+
+                if (attrs.templateUrl) {
+                    template = TourTemplateFactory.get(attrs.templateUrl, scope);
+                }
+
+                if (template) {
+                    options.template = template;
+                }
+
                 scope.$watchCollection(ctrl.getSteps, function (steps) {
                     scope.stepCount = steps.length;
                 });
@@ -212,7 +257,7 @@
 
     }]);
 
-    app.directive('tourStep', [function () {
+    app.directive('tourStep', ['TourTemplateFactory', function (TourTemplateFactory) {
 
         return {
             restrict: 'EA',
@@ -223,7 +268,8 @@
                 var step = {
                     element: element,
                     order: attrs.order || 0
-                };
+                },
+                    template;
 
                 if (attrs.path) { step.path = attrs.path; }
                 if (attrs.animation) { step.animation = attrs.animation; }
@@ -244,6 +290,17 @@
                     step.content = title;
                 });
 
+                if (attrs.template) {
+                    template = TourTemplateFactory.wrap(scope.$eval(attrs.template), scope);
+                }
+
+                if (attrs.templateUrl) {
+                    template = TourTemplateFactory.get(attrs.templateUrl, scope);
+                }
+
+                if (template) {
+                    step.template = template;
+                }
 
                 function stepIsSkipped() {
                     if (attrs.skip) {
