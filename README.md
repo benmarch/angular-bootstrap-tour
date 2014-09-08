@@ -62,6 +62,16 @@ The expression is evaluated before each step, so it can be a dynamic expression.
 Steps that are on hidden elements will not be shown. (Hidden means truly hidden, not obscured.)
 The title and contents options are watched, so an interpolated value can be passed.
 
+## Compatibility
+
+I have tested it and found it working in the following browsers:
+
+- IE8, 9, 10, 11
+- Firefox 32
+- Chrome 37
+- Safari 7
+
+
 ## TODO's
 
 - Write some tests!! (Come on Ben, stop being lazy ;p)
