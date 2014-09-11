@@ -124,7 +124,7 @@
             var ordered = $filter('orderBy')(steps, 'order');
 
             angular.forEach(ordered, function (step, index) {
-                step.next = index + 1;
+                step.next = ordered[index + 1] ? index + 1 : - 1;
                 step.prev = index - 1;
             });
 
