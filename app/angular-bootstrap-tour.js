@@ -57,7 +57,7 @@
          * @param {$rootScope.Scope} scope
          * @returns {Function}
          */
-         function lookupTemplate(templateUrl, scope) {
+        function lookupTemplate(templateUrl, scope) {
 
             var template = $templateCache.get(templateUrl);
 
@@ -74,7 +74,7 @@
          *
          * @param {$rootScope.Scope} scope
          * @param {Attributes} attrs
-         * @param {Object} options
+         * @param {Object} options represents the tour or step object
          */
         helpers.attachTemplate = function (scope, attrs, options) {
 
@@ -99,7 +99,7 @@
          *
          * @param {$rootScope.Scope} scope
          * @param {Attributes} attrs
-         * @param {Object} options
+         * @param {Object} options represents the tour or step object
          * @param {Array} events
          */
         helpers.attachEventHandlers = function (scope, attrs, options, events) {
@@ -111,6 +111,25 @@
                             scope.$eval(attrs[eventName]);
                         });
                     };
+                }
+            });
+
+        };
+
+        /**
+         * Helper function that attaches observers to option attributes
+         *
+         * @param {Attributes} attrs
+         * @param {Object} options represents the tour or step object
+         * @param {Array} keys attribute names
+         */
+        helpers.attachInterpolatedValues = function (attrs, options, keys) {
+
+            angular.forEach(keys, function (key) {
+                if (attrs[key]) {
+                    attrs.$observe(key, function (newValue) {
+                        options[key] = newValue;
+                    });
                 }
             });
 
@@ -146,12 +165,12 @@
         /**
          * As steps are linked, add them to the tour options
          */
-        function refreshTour() {
+        self.refreshTour = function () {
             if (tour) {
                 tour._options.steps = [];
                 tour.addSteps(orderSteps(steps));
             }
-        }
+        };
 
         /**
          * Adds a step to the tour
@@ -164,7 +183,7 @@
             }
 
             steps.push(step);
-            refreshTour();
+            self.refreshTour();
         };
 
         /**
@@ -178,7 +197,7 @@
             }
 
             steps.splice(steps.indexOf(step), 1);
-            refreshTour();
+            self.refreshTour();
         };
 
         /**
@@ -214,26 +233,18 @@
             link: function (scope, element, attrs, ctrl) {
 
                 //Pass static options through or use defaults
-                var options = {
-                        name: attrs.name || 'tour',
-                        container: attrs.container || 'body',
-                        keyboard: attrs.keyboard || true,
-                        storage: attrs.storage ? scope.$eval(attrs.storage) : window.localStorage,
-                        debug: attrs.debug || false,
-                        redirect: attrs.redirect || true,
-                        duration: attrs.duration || false,
-                        basePath: attrs.basePath || '',
-                        placement: attrs.placement || 'right',
-                        backdrop: attrs.backdrop || false,
-                        orphan: attrs.orphan || false
-                    },
-                    events = 'onStart onEnd afterGetState afterSetState afterRemoveState onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' ');
+                var tour = {},
+                    events = 'onStart onEnd afterGetState afterSetState afterRemoveState onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
+                    options = 'name container keyboard storage debug redirect duration basePath placement backdrop orphan'.split(' ');
+
+                //Pass interpolated values through
+                TourHelpers.attachInterpolatedValues(attrs, tour, options);
 
                 //Attach event handlers
-                TourHelpers.attachEventHandlers(scope, attrs, options, events);
+                TourHelpers.attachEventHandlers(scope, attrs, tour, events);
 
                 //Compile template
-                TourHelpers.attachTemplate(scope, attrs, options);
+                TourHelpers.attachTemplate(scope, attrs, tour);
 
                 //Monitor number of steps
                 scope.$watchCollection(ctrl.getSteps, function (steps) {
@@ -242,11 +253,11 @@
 
                 //If there is an options argument passed, just use that instead
                 if (attrs.tourOptions) {
-                    angular.extend(options, scope.$eval(attrs.tourOptions));
+                    angular.extend(tour, scope.$eval(attrs.tourOptions));
                 }
 
                 //Initialize tour
-                scope.tour = ctrl.init(options);
+                scope.tour = ctrl.init(tour);
 
             }
         };
@@ -263,27 +274,16 @@
 
                 //Assign required options
                 var step = {
-                        element: element,
-                        order: attrs.order || 0
+                        element: element
                     },
-                    events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' ');
-
-                //Pass static values through
-                if (attrs.path) { step.path = attrs.path; }
-                if (attrs.animation) { step.animation = attrs.animation; }
-                if (attrs.container) { step.container = attrs.container; }
-                if (attrs.placement) { step.placement = attrs.placement; }
-                if (attrs.backdrop) { step.backdrop = attrs.backdrop; }
-                if (attrs.redirect) { step.redirect = attrs.redirect; }
-                if (attrs.orphan) { step.orphan = attrs.orphan; }
-                if (attrs.reflex) { step.reflex = attrs.reflex; }
+                    events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
+                    options = 'content title path animation container placement backdrop redirect orphan reflex'.split(' ');
 
                 //Pass interpolated values through
-                attrs.$observe('content', function (content) {
-                    step.content = content;
-                });
-                attrs.$observe('title', function (title) {
-                    step.content = title;
+                TourHelpers.attachInterpolatedValues(attrs, step, options);
+                attrs.$observe('order', function (order) {
+                    step.order = !isNaN(order*1) ? order*1 : 0;
+                    ctrl.refreshTour();
                 });
 
                 //Attach event handlers
@@ -294,10 +294,14 @@
 
                 //Check whether or not the step should be skipped
                 function stepIsSkipped() {
+                    var skipped;
                     if (attrs.skip) {
-                        return scope.$eval(attrs.skip);
+                        skipped = scope.$eval(attrs.skip);
                     }
-                    return false;
+                    if (!skipped) {
+                        skipped = element.is(':hidden');
+                    }
+                    return skipped;
                 }
                 scope.$watch(stepIsSkipped, function (skip) {
                     if (skip) {
@@ -321,3 +325,5 @@
     }]);
 
 }(angular.module('bm.bsTour', [])));
+
+
