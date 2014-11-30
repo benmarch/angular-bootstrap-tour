@@ -53,6 +53,17 @@ module.exports = function (grunt) {
             }
         },
 
+        copy: {
+            demo: {
+                files: [
+                    {
+                        src: 'dist/angular-bootstrap-tour.js',
+                        dest: 'demo/angular-bootstrap-tour.js'
+                    }
+                ]
+            }
+        },
+
         // Automatically inject Bower components into the app
         wiredep: {
             test: {
@@ -69,6 +80,27 @@ module.exports = function (grunt) {
                         }
                     }
                 }
+            },
+
+            demo: {
+                src: 'demo/index.html',
+                devDependencies: true,
+                ignorePath: '../',
+                exclude: [
+                    'bootstrap.css',
+                    'bootstrap-tour-standalone.js',
+                    'bootstrap-tour-standalone.css',
+                    'respond.src.js'
+                ]
+            }
+        },
+
+
+        bower_main: {
+            demo: {
+                options: {
+                    dest: 'demo/bower_components'
+                }
             }
         }
     });
@@ -80,6 +112,13 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'concat',
         'uglify'
+    ]);
+
+    grunt.registerTask('demo', [
+        'build',
+        'bower_main:demo',
+        'wiredep:demo',
+        'copy:demo'
     ]);
 
     grunt.registerTask('default', [
