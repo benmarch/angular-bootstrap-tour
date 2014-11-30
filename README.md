@@ -85,6 +85,10 @@ Assuming you have Node, grunt, and bower installed:
     bower install
 
     grunt
+    
+## Demo
+    
+I have set up a simple demo using the Bootswatch Cerulean demo page (one of my favorite themes.) To run the demo run `grunt demo` and open demo/index.html in the browser.
 
 
 ## Notes
