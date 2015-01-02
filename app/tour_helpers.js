@@ -89,12 +89,12 @@
 
             var template;
 
-            if (attrs.template) {
-                template = compileTemplate(scope.$eval(attrs.template), scope);
+            if (attrs[helpers.getAttrName('template')]) {
+                template = compileTemplate(scope.$eval(attrs[helpers.getAttrName('template')]), scope);
             }
 
-            if (attrs.templateUrl) {
-                template = lookupTemplate(attrs.templateUrl, scope);
+            if (attrs[helpers.getAttrName('templateUrl')]) {
+                template = lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope);
             }
 
             if (template) {
@@ -114,13 +114,10 @@
         helpers.attachEventHandlers = function (scope, attrs, options, events) {
 
             angular.forEach(events, function (eventName) {
-                if (TourConfig.get('prefixOptions')) {
-                    eventName = TourConfig.get('prefix') + eventName.charAt(0).toUpperCase() + eventName.substr(1);
-                }
-                if (attrs[eventName]) {
+                if (attrs[helpers.getAttrName(eventName)]) {
                     options[eventName] = function (tour) {
                         safeApply(scope, function () {
-                            scope.$eval(attrs[eventName]);
+                            scope.$eval(attrs[helpers.getAttrName(eventName)]);
                         });
                     };
                 }
@@ -138,17 +135,28 @@
         helpers.attachInterpolatedValues = function (attrs, options, keys) {
 
             angular.forEach(keys, function (key) {
-                if (TourConfig.get('prefixOptions')) {
-                    key = TourConfig.get('prefix') + key.charAt(0).toUpperCase() + key.substr(1);
-                }
-                if (attrs[key]) {
-                    options[key] = stringToBoolean(attrs[key]);
-                    attrs.$observe(key, function (newValue) {
+                if (attrs[helpers.getAttrName(key)]) {
+                    options[key] = stringToBoolean(attrs[helpers.getAttrName(key)]);
+                    attrs.$observe(helpers.getAttrName(key), function (newValue) {
                         options[key] = stringToBoolean(newValue);
                     });
                 }
             });
 
+        };
+
+        /**
+         * Returns the attribute name for an option depending on the prefix
+         *
+         * @param {string} option - name of option
+         * @returns {string} potentially prefixed name of option, or just name of option
+         */
+        helpers.getAttrName = function (option) {
+            if (TourConfig.get('prefixOptions')) {
+                return TourConfig.prefix + option.charAt(0).toUpperCase() + option.substr(1);
+            } else {
+                return option;
+            }
         };
 
         return helpers;

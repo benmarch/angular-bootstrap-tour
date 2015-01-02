@@ -32,8 +32,13 @@
                     });
 
                     //If there is an options argument passed, just use that instead
+                    //@deprecated use 'options' instead
                     if (attrs.tourOptions) {
                         angular.extend(tour, scope.$eval(attrs.tourOptions));
+                    }
+
+                    if (attrs[TourHelpers.getAttrName('options')]) {
+                        angular.extend(tour, scope.$eval(attrs[TourHelpers.getAttrName('options')]));
                     }
 
                     //Initialize tour

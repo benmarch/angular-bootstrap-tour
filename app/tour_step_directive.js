@@ -4,7 +4,7 @@
     'use strict';
 
     function directive() {
-        return ['TourHelpers', function (TourHelpers) {
+        return ['TourHelpers', 'TourConfig', function (TourHelpers, TourConfig) {
 
             return {
                 restrict: 'EA',
@@ -21,7 +21,7 @@
 
                     //Pass interpolated values through
                     TourHelpers.attachInterpolatedValues(attrs, step, options);
-                    attrs.$observe('order', function (order) {
+                    attrs.$observe(TourHelpers.getAttrName('order'), function (order) {
                         step.order = !isNaN(order*1) ? order*1 : 0;
                         ctrl.refreshTour();
                     });
@@ -35,11 +35,11 @@
                     //Check whether or not the step should be skipped
                     function stepIsSkipped() {
                         var skipped;
-                        if (attrs.skip) {
-                            skipped = scope.$eval(attrs.skip);
+                        if (attrs[TourHelpers.getAttrName('skip')]) {
+                            skipped = scope.$eval(attrs[TourHelpers.getAttrName('skip')]);
                         }
                         if (!skipped) {
-                            skipped = element.is(':hidden');
+                            skipped = !!step.path || element.is(':hidden');
                         }
                         return skipped;
                     }
@@ -52,8 +52,16 @@
                     });
 
                     //If there is an options argument passed, just use that instead
-                    if (attrs.options) {
-                        angular.extend(step, scope.$eval(attrs.options));
+                    if (attrs[TourHelpers.getAttrName('options')]) {
+                        angular.extend(step, scope.$eval(attrs[TourHelpers.getAttrName('options')]));
+                    }
+
+                    //set up redirects
+                    if (attrs[TourHelpers.getAttrName('path')]) {
+                        step.path = document.location.pathname + '#' + scope.$eval(TourHelpers.getAttrName('path'));
+                    }
+                    if (attrs[TourHelpers.getAttrName('abspath')]) {
+                        step.path = scope.$eval(TourHelpers.getAttrName('abspath'));
                     }
 
                     //Add step to tour
