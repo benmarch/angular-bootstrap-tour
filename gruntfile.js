@@ -41,7 +41,7 @@ module.exports = function (grunt) {
 
         concat: {
             angular: {
-                src: ['<%= config.app %>/**/*.js'],
+                src: ['<%= config.app %>/angular-bootstrap-tour.js', '<%= config.app %>/**/*.js'],
                 dest: '<%= config.dist %>/angular-bootstrap-tour.js'
             }
         },

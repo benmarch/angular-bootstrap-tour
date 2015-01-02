@@ -22,6 +22,7 @@ module.exports = function(config) {
             'bower_components/bootstrap-tour/build/js/bootstrap-tour.js',
             'bower_components/bootstrap-tour/build/js/bootstrap-tour-standalone.js',
             //endbower
+            'app/angular-bootstrap-tour.js',
             'app/**/*.js',
             'test/spec/**/*.js'
         ],
