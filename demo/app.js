@@ -1,6 +1,6 @@
 (function (app) {
 
-    app.config(['$routeProvider', function ($routeProvider) {
+    app.config(['$routeProvider', 'TourConfigProvider', function ($routeProvider, TourConfigProvider) {
 
         $routeProvider
             .when('/docs', {
@@ -18,6 +18,10 @@
             .otherwise({
                 redirectTo: '/docs'
             });
+
+        //These are defaults
+        TourConfigProvider.set('prefixOptions', false);
+        TourConfigProvider.set('prefix', 'bsTour');
 
     }]);
 

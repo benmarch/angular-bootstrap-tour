@@ -1,6 +1,6 @@
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     app.factory('TourHelpers', ['$templateCache', '$compile', 'TourConfig', function ($templateCache, $compile, TourConfig) {
@@ -154,7 +154,7 @@
          */
         helpers.getAttrName = function (option) {
             if (TourConfig.get('prefixOptions')) {
-                return TourConfig.prefix + option.charAt(0).toUpperCase() + option.substr(1);
+                return TourConfig.get('prefix') + option.charAt(0).toUpperCase() + option.substr(1);
             } else {
                 return option;
             }

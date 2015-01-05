@@ -1,6 +1,6 @@
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     app.controller('TourController', ['$filter', '$timeout', function ($filter, $timeout) {

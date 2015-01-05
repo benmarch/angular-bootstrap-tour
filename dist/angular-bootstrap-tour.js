@@ -16,7 +16,7 @@
 
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     app.provider('TourConfig', [function () {
@@ -48,7 +48,7 @@
 
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     app.controller('TourController', ['$filter', '$timeout', function ($filter, $timeout) {
@@ -174,7 +174,7 @@
 
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     function directive () {
@@ -232,7 +232,7 @@
 
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     app.factory('TourHelpers', ['$templateCache', '$compile', 'TourConfig', function ($templateCache, $compile, TourConfig) {
@@ -386,7 +386,7 @@
          */
         helpers.getAttrName = function (option) {
             if (TourConfig.get('prefixOptions')) {
-                return TourConfig.prefix + option.charAt(0).toUpperCase() + option.substr(1);
+                return TourConfig.get('prefix') + option.charAt(0).toUpperCase() + option.substr(1);
             } else {
                 return option;
             }
@@ -400,11 +400,11 @@
 
 /* global angular: false */
 
-(function angularBootstrapTour(app) {
+(function (app) {
     'use strict';
 
     function directive() {
-        return ['TourHelpers', '$location', '$rootScope', function (TourHelpers, $location, $rootScope) {
+        return ['TourHelpers', '$location', function (TourHelpers, $location) {
 
             return {
                 restrict: 'EA',
@@ -418,7 +418,7 @@
                             stepId: attrs.tourStep
                         },
                         events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
-                        options = 'content title path animation container placement backdrop redirect orphan reflex path nextStep prevStep nextPath prevPath'.split(' '),
+                        options = 'content title path animation container placement backdrop redirect orphan reflex nextStep prevStep nextPath prevPath'.split(' '),
                         orderWatch,
                         skipWatch;
 
