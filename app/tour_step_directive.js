@@ -4,7 +4,7 @@
     'use strict';
 
     function directive() {
-        return ['TourHelpers', 'TourConfig', function (TourHelpers, TourConfig) {
+        return ['TourHelpers', '$location', '$rootScope', function (TourHelpers, $location, $rootScope) {
 
             return {
                 restrict: 'EA',
@@ -14,14 +14,17 @@
 
                     //Assign required options
                     var step = {
-                            element: element
+                            element: element,
+                            stepId: attrs.tourStep
                         },
                         events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
-                        options = 'content title path animation container placement backdrop redirect orphan reflex'.split(' ');
+                        options = 'content title path animation container placement backdrop redirect orphan reflex path nextStep prevStep nextPath prevPath'.split(' '),
+                        orderWatch,
+                        skipWatch;
 
                     //Pass interpolated values through
                     TourHelpers.attachInterpolatedValues(attrs, step, options);
-                    attrs.$observe(TourHelpers.getAttrName('order'), function (order) {
+                    orderWatch = attrs.$observe(TourHelpers.getAttrName('order'), function (order) {
                         step.order = !isNaN(order*1) ? order*1 : 0;
                         ctrl.refreshTour();
                     });
@@ -43,12 +46,18 @@
                         }
                         return skipped;
                     }
-                    scope.$watch(stepIsSkipped, function (skip) {
+                    skipWatch = scope.$watch(stepIsSkipped, function (skip) {
                         if (skip) {
                             ctrl.removeStep(step);
                         } else {
                             ctrl.addStep(step);
                         }
+                    });
+
+                    scope.$on('$destroy', function () {
+                        ctrl.removeStep(step);
+                        orderWatch();
+                        skipWatch();
                     });
 
                     //If there is an options argument passed, just use that instead
@@ -57,11 +66,26 @@
                     }
 
                     //set up redirects
-                    if (attrs[TourHelpers.getAttrName('path')]) {
-                        step.path = document.location.pathname + '#' + scope.$eval(TourHelpers.getAttrName('path'));
+                    function setRedirect(direction, path, targetName) {
+                        var oldHandler = step[direction];
+                        step[direction] = function (tour) {
+                            if (oldHandler) {
+                                oldHandler(tour);
+                            }
+                            ctrl.waitFor(targetName);
+
+                            TourHelpers.safeApply(scope, function () {
+                                $location.path(path);
+                            });
+                        };
                     }
-                    if (attrs[TourHelpers.getAttrName('abspath')]) {
-                        step.path = scope.$eval(TourHelpers.getAttrName('abspath'));
+                    if (step.nextPath) {
+                        step.redirectNext = true;
+                        setRedirect('onNext', step.nextPath, step.nextStep);
+                    }
+                    if (step.prevPath) {
+                        step.redirectPrev = true;
+                        setRedirect('onPrev', step.prevPath, step.prevStep);
                     }
 
                     //Add step to tour

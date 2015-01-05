@@ -18,10 +18,15 @@
     "angular": "~1.2.23",
     "bootstrap-tour": "~0.9.3",
     "jquery": "1.11.1",
-    "bootstrap": "3.0.3"
+    "bootstrap": "3.0.3",
+    "angular-route": "1.2.16"
   },
   "devDependencies": {
     "html5shiv": "~3.7.2",
     "respond": "~1.4.2"
+  },
+  "resolutions": {
+    "angular": "1.2.16",
+    "angular-route": "1.2.16"
   }
 }

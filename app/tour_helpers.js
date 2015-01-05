@@ -5,7 +5,8 @@
 
     app.factory('TourHelpers', ['$templateCache', '$compile', 'TourConfig', function ($templateCache, $compile, TourConfig) {
 
-        var helpers = {};
+        var helpers = {},
+            safeApply;
 
         /**
          * Helper function that calls scope.$apply if a digest is not currently in progress
@@ -14,7 +15,7 @@
          * @param {$rootScope.Scope} scope
          * @param {Function} fn
          */
-        function safeApply(scope, fn) {
+        safeApply = helpers.safeApply = function(scope, fn) {
             var phase = scope.$$phase;
             if (phase === '$apply' || phase === '$digest') {
                 if (fn && (typeof(fn) === 'function')) {
@@ -23,7 +24,7 @@
             } else {
                 scope.$apply(fn);
             }
-        }
+        };
 
         /**
          * Compiles and links a template to the provided scope
