@@ -35,13 +35,13 @@ Then add the module to your app:
     
 ## Configuration
     
-    The TourConfigProvider allows you to set a couple options:
-    - `prefixOptions` {boolean, default: false} if set to true will require directive options to be prefixed to avoid conflicts
-    - `prefix` {string, default: 'bsTour'} the prefix to use if `prefixOptions` is set to `true`
-    
-    Use `TourConfigProvider.set(<option>, <value>)` in your app's config block to change the settings
-    
-    You can use either `tour` and `tourStep` or `bsTour` and `bsTourStep` as directive names without changing config.
+The TourConfigProvider allows you to set a couple options:
+- `prefixOptions` {boolean, default: false} if set to true will require directive options to be prefixed to avoid conflicts
+- `prefix` {string, default: 'bsTour'} the prefix to use if `prefixOptions` is set to `true`
+
+Use `TourConfigProvider.set(<option>, <value>)` in your app's config block to change the settings
+
+You can use either `tour` and `tourStep` or `bsTour` and `bsTourStep` as directive names without changing config.
 
 ## Examples
 
