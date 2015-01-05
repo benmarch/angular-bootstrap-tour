@@ -4,7 +4,7 @@
     'use strict';
 
     function directive() {
-        return ['TourHelpers', '$location', '$rootScope', function (TourHelpers, $location, $rootScope) {
+        return ['TourHelpers', '$location', function (TourHelpers, $location) {
 
             return {
                 restrict: 'EA',
