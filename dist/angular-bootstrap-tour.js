@@ -439,6 +439,10 @@
                     function stepIsSkipped() {
                         var skipped;
                         if (attrs[TourHelpers.getAttrName('skip')]) {
+                            //force not skipped
+                            if (attrs[TourHelpers.getAttrName('skip')] === 'false') {
+                                return false;
+                            }
                             skipped = scope.$eval(attrs[TourHelpers.getAttrName('skip')]);
                         }
                         if (!skipped) {
