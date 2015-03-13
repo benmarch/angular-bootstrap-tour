@@ -3,7 +3,7 @@
 (function (app) {
     'use strict';
 
-    app.factory('TourHelpers', ['$templateCache', '$compile', 'TourConfig', function ($templateCache, $compile, TourConfig) {
+    app.factory('TourHelpers', ['$templateCache', '$http', '$compile', 'TourConfig', function ($templateCache, $http, $compile, TourConfig) {
 
         var helpers = {},
             safeApply;
@@ -49,17 +49,18 @@
          *
          * @param {String} templateUrl
          * @param {$rootScope.Scope} scope
-         * @returns {Function}
+         * @returns {Promise}
          */
         function lookupTemplate(templateUrl, scope) {
 
-            var template = $templateCache.get(templateUrl);
-
-            if (template) {
-                return compileTemplate(template, scope);
-            }
-
-            return null;
+            return $http.get(templateUrl, {
+                cache: $templateCache
+            }).success(function (template) {
+                if (template) {
+                    return compileTemplate(template, scope);
+                }
+                return '';
+            });
 
         }
 
@@ -94,12 +95,16 @@
                 template = compileTemplate(scope.$eval(attrs[helpers.getAttrName('template')]), scope);
             }
 
-            if (attrs[helpers.getAttrName('templateUrl')]) {
-                template = lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope);
-            }
-
             if (template) {
                 options.template = template;
+            }
+
+            if (attrs[helpers.getAttrName('templateUrl')]) {
+                lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope).then(function (template) {
+                    if (template) {
+                        options.template = template;
+                    }
+                });
             }
 
         };
