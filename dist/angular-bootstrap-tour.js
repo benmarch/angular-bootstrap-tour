@@ -188,6 +188,7 @@
 
                     //Pass static options through or use defaults
                     var tour = {},
+                        templateReady,
                         events = 'onStart onEnd afterGetState afterSetState afterRemoveState onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
                         options = 'name container keyboard storage debug redirect duration basePath backdrop orphan'.split(' ');
 
@@ -198,7 +199,7 @@
                     TourHelpers.attachEventHandlers(scope, attrs, tour, events);
 
                     //Compile template
-                    TourHelpers.attachTemplate(scope, attrs, tour);
+                    templateReady = TourHelpers.attachTemplate(scope, attrs, tour);
 
                     //Monitor number of steps
                     scope.$watchCollection(ctrl.getSteps, function (steps) {
@@ -216,8 +217,10 @@
                     }
 
                     //Initialize tour
-                    scope.tour = ctrl.init(tour);
-                    scope.tour.refresh = ctrl.refreshTour;
+                    templateReady.then(function () {
+                        scope.tour = ctrl.init(tour);
+                        scope.tour.refresh = ctrl.refreshTour;
+                    });
 
                 }
             };
@@ -235,7 +238,7 @@
 (function (app) {
     'use strict';
 
-    app.factory('TourHelpers', ['$templateCache', '$compile', 'TourConfig', function ($templateCache, $compile, TourConfig) {
+    app.factory('TourHelpers', ['$templateCache', '$http', '$compile', 'TourConfig', '$q', function ($templateCache, $http, $compile, TourConfig, $q) {
 
         var helpers = {},
             safeApply;
@@ -281,17 +284,18 @@
          *
          * @param {String} templateUrl
          * @param {$rootScope.Scope} scope
-         * @returns {Function}
+         * @returns {Promise}
          */
         function lookupTemplate(templateUrl, scope) {
 
-            var template = $templateCache.get(templateUrl);
-
-            if (template) {
-                return compileTemplate(template, scope);
-            }
-
-            return null;
+            return $http.get(templateUrl, {
+                cache: $templateCache
+            }).success(function (template) {
+                if (template) {
+                    return compileTemplate(template, scope);
+                }
+                return '';
+            });
 
         }
 
@@ -320,19 +324,25 @@
          */
         helpers.attachTemplate = function (scope, attrs, options) {
 
-            var template;
+            var deferred = $q.defer(),
+                template;
 
             if (attrs[helpers.getAttrName('template')]) {
                 template = compileTemplate(scope.$eval(attrs[helpers.getAttrName('template')]), scope);
-            }
-
-            if (attrs[helpers.getAttrName('templateUrl')]) {
-                template = lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope);
-            }
-
-            if (template) {
                 options.template = template;
+                deferred.resolve(template);
+            } else if (attrs[helpers.getAttrName('templateUrl')]) {
+                lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope).then(function (template) {
+                    if (template) {
+                        options.template = template;
+                        deferred.resolve(template);
+                    }
+                });
+            } else {
+                deferred.resolve();
             }
+
+            return deferred.promise;
 
         };
 
@@ -418,9 +428,10 @@
                             stepId: attrs.tourStep
                         },
                         events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
-                        options = 'content title path animation container placement backdrop redirect orphan reflex nextStep prevStep nextPath prevPath'.split(' '),
+                        options = 'content title path animation container placement backdrop redirect orphan reflex duration nextStep prevStep nextPath prevPath'.split(' '),
                         orderWatch,
-                        skipWatch;
+                        skipWatch,
+                        templateReady;
 
                     //Pass interpolated values through
                     TourHelpers.attachInterpolatedValues(attrs, step, options);
@@ -433,7 +444,7 @@
                     TourHelpers.attachEventHandlers(scope, attrs, step, events);
 
                     //Compile templates
-                    TourHelpers.attachTemplate(scope, attrs, step);
+                    templateReady = TourHelpers.attachTemplate(scope, attrs, step);
 
                     //Check whether or not the step should be skipped
                     function stepIsSkipped() {
@@ -489,7 +500,9 @@
                     }
 
                     //Add step to tour
-                    ctrl.addStep(step);
+                    templateReady.then(function () {
+                        ctrl.addStep(step);
+                    });
 
                 }
             };
