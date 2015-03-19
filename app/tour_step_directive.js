@@ -18,7 +18,7 @@
                             stepId: attrs.tourStep
                         },
                         events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
-                        options = 'content title path animation container placement backdrop redirect orphan reflex nextStep prevStep nextPath prevPath'.split(' '),
+                        options = 'content title path animation container placement backdrop redirect orphan reflex duration nextStep prevStep nextPath prevPath'.split(' '),
                         orderWatch,
                         skipWatch,
                         templateReady;
