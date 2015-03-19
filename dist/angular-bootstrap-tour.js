@@ -271,10 +271,7 @@
         function compileTemplate(template, scope) {
             return function (/*index, step*/) {
                 var $template = angular.element(template); //requires jQuery
-                safeApply(scope, function () {
-                    $compile($template)(scope);
-                });
-                return $template;
+                return $compile($template)(scope);
             };
 
         }
