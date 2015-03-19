@@ -1,6 +1,12 @@
 # angular-bootstrap-tour
 [![Bower Version][bower-image]][bower-url]
 
+## Development on Hold
+
+I am currently working on a fork of this repo aimed at removing the jQuery dependency. This also means that I will be 
+removing the dependency on Bootstrap Tour which is a large task. In the meantime, I will not be addressing any new issues;
+however, I will accept pull requests if anyone would like to help out. Thanks!
+
 ## About
 
 This is a simple Angular wrapper around [Bootstrap Tour](http://www.bootstraptour.com).
