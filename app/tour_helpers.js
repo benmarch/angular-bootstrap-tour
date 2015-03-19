@@ -3,7 +3,7 @@
 (function (app) {
     'use strict';
 
-    app.factory('TourHelpers', ['$templateCache', '$http', '$compile', 'TourConfig', function ($templateCache, $http, $compile, TourConfig) {
+    app.factory('TourHelpers', ['$templateCache', '$http', '$compile', 'TourConfig', '$q', function ($templateCache, $http, $compile, TourConfig, $q) {
 
         var helpers = {},
             safeApply;
@@ -89,23 +89,25 @@
          */
         helpers.attachTemplate = function (scope, attrs, options) {
 
-            var template;
+            var deferred = $q.defer(),
+                template;
 
             if (attrs[helpers.getAttrName('template')]) {
                 template = compileTemplate(scope.$eval(attrs[helpers.getAttrName('template')]), scope);
-            }
-
-            if (template) {
                 options.template = template;
-            }
-
-            if (attrs[helpers.getAttrName('templateUrl')]) {
+                deferred.resolve(template);
+            } else if (attrs[helpers.getAttrName('templateUrl')]) {
                 lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope).then(function (template) {
                     if (template) {
                         options.template = template;
+                        deferred.resolve(template);
                     }
                 });
+            } else {
+                deferred.resolve();
             }
+
+            return deferred.promise;
 
         };
 

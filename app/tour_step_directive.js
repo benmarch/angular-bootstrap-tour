@@ -20,7 +20,8 @@
                         events = 'onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
                         options = 'content title path animation container placement backdrop redirect orphan reflex nextStep prevStep nextPath prevPath'.split(' '),
                         orderWatch,
-                        skipWatch;
+                        skipWatch,
+                        templateReady;
 
                     //Pass interpolated values through
                     TourHelpers.attachInterpolatedValues(attrs, step, options);
@@ -33,7 +34,7 @@
                     TourHelpers.attachEventHandlers(scope, attrs, step, events);
 
                     //Compile templates
-                    TourHelpers.attachTemplate(scope, attrs, step);
+                    templateReady = TourHelpers.attachTemplate(scope, attrs, step);
 
                     //Check whether or not the step should be skipped
                     function stepIsSkipped() {
@@ -89,7 +90,9 @@
                     }
 
                     //Add step to tour
-                    ctrl.addStep(step);
+                    templateReady.then(function () {
+                        ctrl.addStep(step);
+                    });
 
                 }
             };

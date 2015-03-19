@@ -14,6 +14,7 @@
 
                     //Pass static options through or use defaults
                     var tour = {},
+                        templateReady,
                         events = 'onStart onEnd afterGetState afterSetState afterRemoveState onShow onShown onHide onHidden onNext onPrev onPause onResume'.split(' '),
                         options = 'name container keyboard storage debug redirect duration basePath backdrop orphan'.split(' ');
 
@@ -24,7 +25,7 @@
                     TourHelpers.attachEventHandlers(scope, attrs, tour, events);
 
                     //Compile template
-                    TourHelpers.attachTemplate(scope, attrs, tour);
+                    templateReady = TourHelpers.attachTemplate(scope, attrs, tour);
 
                     //Monitor number of steps
                     scope.$watchCollection(ctrl.getSteps, function (steps) {
@@ -42,8 +43,10 @@
                     }
 
                     //Initialize tour
-                    scope.tour = ctrl.init(tour);
-                    scope.tour.refresh = ctrl.refreshTour;
+                    templateReady.then(function () {
+                        scope.tour = ctrl.init(tour);
+                        scope.tour.refresh = ctrl.refreshTour;
+                    });
 
                 }
             };
