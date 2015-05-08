@@ -29,7 +29,7 @@
     "type": "git",
     "url": "git://github.com/benmarch/angular-bootstrap-tour.git"
   },
-  "main": "angular-bootstrap-tour.js",
+  "main": "dist/angular-bootstrap-tour.js",
   "scripts": {
     "test": "grunt"
   },
