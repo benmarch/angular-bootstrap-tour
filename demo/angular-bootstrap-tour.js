@@ -499,6 +499,7 @@
                     //Add step to tour
                     templateReady.then(function () {
                         ctrl.addStep(step);
+                        scope.tourStep = step;
                     });
 
                 }
