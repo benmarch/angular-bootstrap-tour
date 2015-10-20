@@ -96,7 +96,7 @@ module.exports = function (grunt) {
         },
 
 
-        bower_main: {
+        'bower_main': {
             demo: {
                 options: {
                     dest: 'demo/bower_components'
