@@ -1,11 +1,10 @@
 # angular-bootstrap-tour
 [![Bower Version][bower-image]][bower-url]
 
-## Development on Hold
+## jQuery-free version now available!
 
-I am currently working on a fork of this repo aimed at removing the jQuery dependency. This also means that I will be 
-removing the dependency on Bootstrap Tour which is a large task. In the meantime, I will not be addressing any new issues;
-however, I will accept pull requests if anyone would like to help out. Thanks!
+I have written a version of this plugin that uses Angular UI Bootstrap instead of Twitter Bootstrap and jQuery. It is 
+now available at [angular-ui-tour](https://github.com/benmarch/angular-ui-tour). Try it out!
 
 ## About
 
