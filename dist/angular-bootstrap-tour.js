@@ -46,7 +46,7 @@
 
 }(angular.module('bm.bsTour')));
 
-/* global angular: false */
+/* global angular: false, Tour: false */
 
 (function (app) {
     'use strict';

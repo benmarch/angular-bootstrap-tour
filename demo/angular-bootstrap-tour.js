@@ -46,7 +46,7 @@
 
 }(angular.module('bm.bsTour')));
 
-/* global angular: false */
+/* global angular: false, Tour: false */
 
 (function (app) {
     'use strict';
@@ -331,7 +331,7 @@
             } else if (attrs[helpers.getAttrName('templateUrl')]) {
                 lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope).then(function (template) {
                     if (template) {
-                        options.template = template;
+                        options.template = template.data;
                         deferred.resolve(template);
                     }
                 });
