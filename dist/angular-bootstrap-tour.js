@@ -287,9 +287,9 @@
 
             return $http.get(templateUrl, {
                 cache: $templateCache
-            }).success(function (template) {
-                if (template) {
-                    return compileTemplate(template, scope);
+            }).then(function (response) {
+                if (response.data) {
+                    return compileTemplate(response.data, scope);
                 }
                 return '';
             });
