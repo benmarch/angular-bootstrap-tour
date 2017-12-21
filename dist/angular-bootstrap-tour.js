@@ -331,7 +331,7 @@
             } else if (attrs[helpers.getAttrName('templateUrl')]) {
                 lookupTemplate(attrs[helpers.getAttrName('templateUrl')], scope).then(function (template) {
                     if (template) {
-                        options.template = template.data;
+                        options.template = template;
                         deferred.resolve(template);
                     }
                 });
